@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -107,10 +109,18 @@ public class agendaDeContatos {
 		JButton btn_salvar = new JButton("Salvar");
 		btn_salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				row[0] = tf_nome.getText();
-				row[1] = tf_telefone.getText();
-				row[2] = tf_aniversario.getText();
-				model.addRow(row);
+				if(tf_nome.getText().equals("") || tf_telefone.getText().equals("") || tf_aniversario.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Favor completar todos os campos!");
+				}else {
+					row[0] = tf_nome.getText();
+					row[1] = tf_telefone.getText();
+					row[2] = tf_aniversario.getText();
+					model.addRow(row);
+					
+					tf_nome.setText(null);
+					tf_telefone.setText(null);
+					tf_aniversario.setText(null);
+				}
 			}
 		});
 		btn_salvar.setBounds(118, 267, 89, 64);
