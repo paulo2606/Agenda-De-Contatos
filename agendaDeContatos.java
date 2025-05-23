@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class agendaDeContatos {
 
@@ -67,6 +69,15 @@ public class agendaDeContatos {
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int posicaoLinha = table.getSelectedRow();
+				tf_nome.setText(model.getValueAt(posicaoLinha, 0).toString());
+				tf_telefone.setText(model.getValueAt(posicaoLinha, 1).toString());
+				tf_aniversario.setText(model.getValueAt(posicaoLinha, 2).toString());
+			}					
+		});
 		model = new DefaultTableModel();
 		Object[] column = {"Nome", "Telefone", "Aniversário"};
 		Object[] row = new Object[3];
@@ -103,6 +114,13 @@ public class agendaDeContatos {
 		frame.getContentPane().add(tf_aniversario);
 		
 		JButton btn_limpar = new JButton("Limpar");
+		btn_limpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tf_nome.setText(null);
+				tf_telefone.setText(null);
+				tf_aniversario.setText(null);
+			}
+		});
 		btn_limpar.setBounds(20, 267, 89, 64);
 		frame.getContentPane().add(btn_limpar);
 		
@@ -117,20 +135,48 @@ public class agendaDeContatos {
 					row[2] = tf_aniversario.getText();
 					model.addRow(row);
 					
+					JOptionPane.showMessageDialog(null, "Contato cadastrado com suscesso");
 					tf_nome.setText(null);
 					tf_telefone.setText(null);
 					tf_aniversario.setText(null);
-				}
+				}	
 			}
 		});
-		btn_salvar.setBounds(118, 267, 89, 64);
+		btn_salvar.setBounds(152, 267, 89, 64);
 		frame.getContentPane().add(btn_salvar);
 		
 		JButton btn_editar = new JButton("Editar ");
-		btn_editar.setBounds(118, 342, 89, 64);
+		btn_editar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int posicaoLinha = table.getSelectedRow();
+
+				if(posicaoLinha >= 0) {
+					model.setValueAt(tf_nome.getText(), posicaoLinha, 0);
+					model.setValueAt(tf_telefone.getText(), posicaoLinha, 1);
+					model.setValueAt(tf_aniversario.getText(), posicaoLinha, 2);
+					
+					JOptionPane.showMessageDialog(null, "Editado com sucesso!");
+				}else {
+					JOptionPane.showMessageDialog(null, "Selecione uma linha para editar!");
+				}
+			}
+		});
+		btn_editar.setBounds(152, 342, 89, 64);
 		frame.getContentPane().add(btn_editar);
 		
 		JButton btn_deletar = new JButton("Deletar");
+		btn_deletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int posicaoLinha = table.getSelectedRow();
+
+				if(posicaoLinha >= 0) {
+					model.removeRow(posicaoLinha);
+					JOptionPane.showMessageDialog(null, "Contato deletado!");
+				}else {
+					JOptionPane.showMessageDialog(null, "Selecione com o cursor a linha que deseja deletar!");
+				}
+			}
+		});
 		btn_deletar.setBounds(20, 342, 89, 64);
 		frame.getContentPane().add(btn_deletar);
 	}
